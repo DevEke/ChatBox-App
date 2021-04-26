@@ -171,7 +171,7 @@ const textStyles = StyleSheet.create({
     labelText: {
         fontFamily: 'Bold',
         fontSize: 14,
-        color: '#999999'
+        color: 'black'
     },
     inputComponent: {
         borderRadius: 15,
@@ -180,13 +180,10 @@ const textStyles = StyleSheet.create({
         paddingLeft: 60,
         paddingRight: 10,
         fontSize: 16,
-        color: "#999",
+        color: "black",
         fontFamily: 'Bold' 
     },
     inputError: {
-        borderColor: 'red',
-        borderWidth: 2,
-        borderStyle: 'solid',
         backgroundColor: '#FFE1E1'
     }
 })

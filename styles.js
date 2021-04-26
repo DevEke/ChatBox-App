@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         marginVertical: 20,
-        padding: 30,
+        padding: 20,
         width: '88%',
         height: '44%',
         backgroundColor: 'white',
@@ -99,5 +99,8 @@ export const styles = StyleSheet.create({
     },
     selectedColor: {
         transform: [{ scale: 1.3}]
+    },
+    chatContainer: {
+        flex: 1
     }
 })
