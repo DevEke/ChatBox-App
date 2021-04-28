@@ -3,45 +3,27 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingVertical: 30
-    },
-    logoContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    titleText: {
-        fontSize: 45,
-        fontWeight: '600',
-        color: 'black',
-        marginVertical: 100
+        paddingVertical: 30,
+        backgroundColor: 'white'
     },
     logoImage: {
         height: 150,
         width: 150,
-        marginVertical: 100
-    },
-    chatTitle: {
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        backgroundColor: 'white',
-        borderRadius: 15,
-        fontSize: 16,
-        color: '#999'
+        marginTop: 100,
+        marginBottom: 20
     },
     formContainer: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         marginVertical: 20,
+        marginBottom: 100,
         padding: 20,
         width: '88%',
         height: '44%',
-        backgroundColor: 'white',
-        borderRadius: 20,
+        backgroundColor: 'white'
     },
     inputContainer: {
         position: 'relative'
@@ -49,15 +31,15 @@ export const styles = StyleSheet.create({
     userIcon: {
         position: 'absolute',
         left: 20,
-        top: 15,
+        top: 18,
         zIndex: 30
     },
     enterChat: {
-        height: 50,
+        height: 60,
         paddingVertical: 10,
         width: '100%',
-        borderRadius: 15,
-        backgroundColor: '#632B8E',
+        borderRadius: 3,
+        backgroundColor: 'black',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -73,7 +55,8 @@ export const styles = StyleSheet.create({
     backgroundColorsContainer: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        paddingHorizontal: 20
     },
     backgroundPicker: {
         height: 40,
@@ -81,9 +64,6 @@ export const styles = StyleSheet.create({
         borderRadius: 20,
         marginHorizontal: 10,
         marginVertical: 20,
-    },
-    dark: {
-        backgroundColor: '#333'
     },
     light: {
         backgroundColor: '#EAEAEA'

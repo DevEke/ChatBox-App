@@ -1,11 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { render } from 'react-dom';
 import { styles } from '../styles';
 import * as Font from 'expo-font';
-import user from '../assets/icons/user.png';
+import { MaterialIcons } from '@expo/vector-icons';
 import logo from '../assets/logo.png';
-import { View, Text, TouchableOpacity, TextInput, Image, StyleSheet, Alert } from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, TextInput, Image, StyleSheet, Alert } from 'react-native';
 
 class StartScreen extends Component {
     constructor(props) {
@@ -13,7 +11,7 @@ class StartScreen extends Component {
 
         this.state = {
             name: '',
-            color: '#333333',
+            color: '#EAEAEA',
             error: false
         }
     }
@@ -42,18 +40,12 @@ class StartScreen extends Component {
 
     getFonts = () => {
         return Font.loadAsync({
-          'Regular': require('../assets/fonts/Quicksand-Regular.ttf'),
-          'Bold': require('../assets/fonts/Quicksand-Bold.ttf')
+          "Light": require('../assets/fonts/Sen-Regular.ttf'),
+          "Bold": require('../assets/fonts/Sen-Bold.ttf')
         });
       };
 
     // These functions set the state of the background color. There is probably an easier way to do this.
-
-    setDark = () => {
-        this.setState({
-            color: '#333333'
-        })
-    }
 
     setLight = () => {
         this.setState({
@@ -93,7 +85,7 @@ class StartScreen extends Component {
                     <Image source={logo} style={styles.logoImage}/>
                 <View style={styles.formContainer}>  
                     <View style={styles.inputContainer}>
-                        <Image style={styles.userIcon} source={user}></Image>
+                        <MaterialIcons style={styles.userIcon} name="account-circle" size={24} color="#999" />
                         <TextInput
                             style={
                             error === true 
@@ -105,18 +97,10 @@ class StartScreen extends Component {
                             placeholder="Enter your name..."
                             
                         />
+                        { Platform.OS === 'android' ? <KeyboardAvoidingView keyboardVerticalOffset={100} behavior="height"/> : null }
                     </View>
                     <View style={styles.backgroundSelectorContainer}>
-                        <Text style={textStyles.labelText}>Set Background Color</Text>
                         <View style={styles.backgroundColorsContainer}>
-                            <TouchableOpacity onPress={this.setDark}
-                                style={
-                                color === '#333333'
-                                ? [styles.backgroundPicker, styles.dark, styles.selectedColor] 
-                                : [styles.backgroundPicker, styles.dark ]
-                                }
-                            >
-                            </TouchableOpacity>
                             <TouchableOpacity onPress={this.setLight}
                                 style={
                                 color === '#EAEAEA'
@@ -166,7 +150,8 @@ const textStyles = StyleSheet.create({
     buttonText: {
         fontFamily: 'Bold',
         color: 'white',
-        fontSize: 16
+        fontSize: 18,
+        textTransform: 'uppercase'
     },
     labelText: {
         fontFamily: 'Bold',
@@ -174,9 +159,9 @@ const textStyles = StyleSheet.create({
         color: 'black'
     },
     inputComponent: {
-        borderRadius: 15,
+        borderRadius: 3,
         backgroundColor: '#f3f3f3',
-        height: 50,
+        height: 60,
         paddingLeft: 60,
         paddingRight: 10,
         fontSize: 16,

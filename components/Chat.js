@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { styles } from '../styles';
 import * as Font from 'expo-font';
-import send from '../assets/icons/send.png'
-import avatar from '../assets/icons/avater.png';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import user1 from '../assets/icons/user1.png';
+import user2 from '../assets/icons/user2.png';
 import { Bubble, GiftedChat, InputToolbar, Send, Avatar } from 'react-native-gifted-chat';
 import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, Image, Keyboard } from 'react-native';
 
@@ -18,8 +19,8 @@ class ChatScreen extends Component {
 
     getFonts = () => {
         return Font.loadAsync({
-          'Regular': require('../assets/fonts/Quicksand-Regular.ttf'),
-          'Bold': require('../assets/fonts/Quicksand-Bold.ttf')
+            "Light": require('../assets/fonts/Sen-Regular.ttf'),
+            "Bold": require('../assets/fonts/Sen-Bold.ttf')
         });
       };
 
@@ -38,7 +39,7 @@ class ChatScreen extends Component {
         return (
             <Send {...props} containerStyle={{ height: 40, width: 40, justifyContent: 'center', alignItems: 'center'}}>
                 <View style={{marginRight: 5, marginBottom: 5}}>
-                    <Image source={send} resizeMode={'center'}/>
+                    <MaterialCommunityIcons name="send-circle" size={32}/>
                 </View>
             </Send>
         )
@@ -54,10 +55,12 @@ class ChatScreen extends Component {
                 wrapperStyle={{
                     right: {
                         backgroundColor: '#333',
+                        borderRadius: 3,
                         padding: 5
                     },
                     left: {
                         padding: 5,
+                        borderRadius: 3,
                         backgroundColor: 'white'
                     }
                 }}
@@ -97,7 +100,7 @@ class ChatScreen extends Component {
                     user: {
                         _id: 2,
                         name: 'React Native',
-                        avatar: 'https://placeimg.com/140/140/any'
+                        avatar: user2
                     }
                 },
                 {
@@ -129,7 +132,7 @@ class ChatScreen extends Component {
                     user={{
                         _id: 1,
                         name: name,
-                        avatar: avatar
+                        avatar: user1
                     }}
                     textStyles={textStyles.input}
                 />
