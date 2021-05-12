@@ -9,6 +9,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
+
 const getFonts = () => {
   return Font.loadAsync({
     "Light": require('./assets/fonts/Sen-Regular.ttf'),
