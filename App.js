@@ -6,38 +6,41 @@ import ChatScreen from './components/Chat';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 const Stack = createStackNavigator();
 
 
-const getFonts = () => {
-  return Font.loadAsync({
-    "Light": require('./assets/fonts/Sen-Regular.ttf'),
-    "Bold": require('./assets/fonts/Sen-Bold.ttf')
-  });
-};
+// Gets Custom Fonts
+  const getFonts = () => {
+    return Font.loadAsync({
+      "Light": require('./assets/fonts/Sen-Regular.ttf'),
+      "Bold": require('./assets/fonts/Sen-Bold.ttf')
+    });
+  };
 
-export default function App() {
+// Creates and exports App
+  export default function App() {
 
-  const [ fontLoaded, setFontLoaded] = useState(false);
+    const [ fontLoaded, setFontLoaded] = useState(false);
 
-  if (!fontLoaded) {
+  // Checks if fonts were succesfully loaded  
+    if (!fontLoaded) {
+      return (
+        <AppLoading
+          startAsync={getFonts}
+          onFinish={() => setFontLoaded(true)}
+          onError={console.warn}
+        />
+      );
+    }
+
+  // Renders App
     return (
-      <AppLoading
-        startAsync={getFonts}
-        onFinish={() => setFontLoaded(true)}
-        onError={console.warn}
-      />
+      <NavigationContainer>
+          <Stack.Navigator initialRouteName="Start">
+            <Stack.Screen name="Start" component={StartScreen}/>
+            <Stack.Screen name="Chat" component={ChatScreen}/>
+          </Stack.Navigator>  
+        </NavigationContainer>
     );
   }
-
-  return (
-    <NavigationContainer>
-        <Stack.Navigator initialRouteName="Start">
-          <Stack.Screen name="Start" component={StartScreen}/>
-          <Stack.Screen name="Chat" component={ChatScreen}/>
-        </Stack.Navigator>  
-      </NavigationContainer>
-  );
-}
 

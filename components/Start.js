@@ -5,78 +5,75 @@ import { MaterialIcons } from '@expo/vector-icons';
 import logo from '../assets/logo.png';
 import { View, Text, KeyboardAvoidingView, TouchableOpacity, TextInput, Image, StyleSheet, Alert } from 'react-native';
 
-class StartScreen extends Component {
-    constructor(props) {
-        super(props);
+// Creates App
+    class StartScreen extends Component {
+        constructor(props) {
+            super(props);
 
-        this.state = {
-            name: '',
-            color: '#EAEAEA',
-            error: false
-        }
-    }
-
-    // This function validates that the user enters something in the input field.
-
-    inputValidation = () => {
-        if (this.state.name === '') {
-            Alert.alert("Enter your name")
-            this.setState({
-                error: true
-            })
-        }
-        else {
-            this.setState({
+            this.state = {
+                name: '',
+                color: '#EAEAEA',
                 error: false
-            })
-            this.props.navigation.navigate('Chat', {
-                name: this.state.name, 
-                color: this.state.color
+            }
+        }
+
+    // Checks for an empty name input
+        inputValidation = () => {
+            if (this.state.name === '') {
+                Alert.alert("Enter your name")
+                this.setState({
+                    error: true
+                })
+            }
+            else {
+                this.setState({
+                    error: false
+                })
+                this.props.navigation.navigate('Chat', {
+                    name: this.state.name, 
+                    color: this.state.color
+                })
+            }
+        }
+
+    // Set Font Properties
+        getFonts = () => {
+            return Font.loadAsync({
+            "Light": require('../assets/fonts/Sen-Regular.ttf'),
+            "Bold": require('../assets/fonts/Sen-Bold.ttf')
+            });
+        };
+
+    // Set Background Colors
+        setLight = () => {
+            this.setState({
+                color: '#EAEAEA'
             })
         }
-    }
+        setWarm = () => {
+            this.setState({
+                color: '#FAD0B2'
+            })
+        }
+        setCool = () => {
+            this.setState({
+                color: '#9EC0D8'
+            })
+        }
+        setEarth = () => {
+            this.setState({
+                color: '#8EC090'
+            })
+        }
+    
 
-    // This function is for loading my custom fonts into the app
-
-    getFonts = () => {
-        return Font.loadAsync({
-          "Light": require('../assets/fonts/Sen-Regular.ttf'),
-          "Bold": require('../assets/fonts/Sen-Bold.ttf')
-        });
-      };
-
-    // These functions set the state of the background color. There is probably an easier way to do this.
-
-    setLight = () => {
-        this.setState({
-            color: '#EAEAEA'
-        })
-    }
-
-    setWarm = () => {
-        this.setState({
-            color: '#FAD0B2'
-        })
-    }
-
-    setCool = () => {
-        this.setState({
-            color: '#9EC0D8'
-        })
-    }
-    setEarth = () => {
-        this.setState({
-            color: '#8EC090'
-        })
-    }
-
-    // This function will hide the title bar on the start screen and trigger the function to get the fonts
-
+// App Mounted
     componentDidMount() {
         this.props.navigation.setOptions({ headerShown: false});
         this.getFonts();
     }
 
+    // App Rendered
     render() {
         const { name, color, error } = this.state;
         

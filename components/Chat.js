@@ -43,8 +43,52 @@ class ChatScreen extends Component {
           
     }
 
+// References active user list 
+    onAuthStateChanged() {
+        this.referencedUser = firebase.firestore().collection('users').where("uid", "==". this.state.user.uid);
+    }
+
+
+// Updates state with messages from the firebase firestore
+onMessagesUpdate = (querySnapshot) => {
+    const messages = [];
+     querySnapshot.forEach((doc) => {
+         let data = doc.data();
+         messages.push({
+             uid: data.uid,
+             text: data.text,
+             createdAt: data.createdAt.toDate(),
+             system: false
+         })
+     })
+     this.setState({messages: messages})
+ }
+
+// Adds messages to the firebaase firestore
+ addMessages = () => {
+     const messages = this.state.messages[0];
+     this.referenceChatMessages.add({
+         text: messages.text || '',
+         createdAt: messages.createdAt,
+         system: false,
+         uid: messages._id,
+     })
+ }
+
+// Adds a user the firebase firestore
+ addUser = () => {
+     const user = this.state.user;
+     this.referenceUsersList.add({
+         uid: user.uid,
+         name: user.name,
+     })
+ }    
+
 // App Component Mounted
     componentDidMount() {
+
+    // Gets messages
+        this.getMessages();
 
     // Displays name from the login screen
         const { name } = this.props.route.params;
@@ -70,45 +114,8 @@ class ChatScreen extends Component {
         })
     }
 
-// References active user list 
-    onAuthStateChanged() {
-        this.referencedUser = firebase.firestore().collection('users').where("uid", "==". this.state.user.uid);
-    }
 
-// Updates state with messages from the firebase firestore
-    onMessagesUpdate = (querySnapshot) => {
-       const messages = [];
-        querySnapshot.forEach((doc) => {
-            let data = doc.data();
-            messages.push({
-                uid: data.uid,
-                text: data.text,
-                createdAt: data.createdAt.toDate(),
-                system: false
-            })
-        })
-        this.setState({messages: messages})
-    }
 
-// Adds messages to the firebaase firestore
-    addMessages = () => {
-        const messages = this.state.messages[0];
-        this.referenceChatMessages.add({
-            text: messages.text || '',
-            createdAt: messages.createdAt,
-            system: false,
-            uid: messages._id,
-        })
-    }
-
-// Adds a user the firebase firestore
-    addUser = () => {
-        const user = this.state.user;
-        this.referenceUsersList.add({
-            uid: user.uid,
-            name: user.name,
-        })
-    }
 
 // Adds the message to the gifted chat, runs the addmessages function and dismisses keyboard
     onSend(messages = []) {
