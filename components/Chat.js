@@ -5,6 +5,8 @@ import user1 from '../assets/icons/user1.png';
 import user2 from '../assets/icons/user2.png';
 import { Bubble, GiftedChat, InputToolbar, Send, Avatar } from 'react-native-gifted-chat';
 import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, Image, Keyboard } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 const firebase = require('firebase');
 require('firebase/firestore');
 require('firebase/auth');
@@ -82,12 +84,44 @@ onMessagesUpdate = (querySnapshot) => {
          uid: user.uid,
          name: user.name,
      })
- }    
+ } 
+// Gets messages
+    async getMessages() {
+        let messages = '';
+        try {
+            messages = await AsyncStorage.getItem('messages') || [];
+            this.setState({
+                messages: JSON.parse(messages)
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
+// Saves Messages
+    async saveMessages() {
+        try {
+            await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+         } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+
+// Deletes messages
+    async deleteMessges() {
+        try {
+            await AsyncStorage.removeItem('messages');
+            this.setState({
+                messages: []
+            });
+        } catch (error) {
+            console.lof(error.message);
+        }
+    }
 
 // App Component Mounted
     componentDidMount() {
-
-    // Gets messages
         this.getMessages();
 
     // Displays name from the login screen
@@ -122,7 +156,7 @@ onMessagesUpdate = (querySnapshot) => {
         this.setState(previousState => ({
             messages: GiftedChat.append(previousState.messages, messages),
         }), () => {
-            this.addMessages();
+            this.saveMessages();
         });
         Keyboard.dismiss();
     }
