@@ -82,7 +82,7 @@ import { View, Text, KeyboardAvoidingView, TouchableOpacity, TextInput, Image, S
                     <Image source={logo} style={styles.logoImage}/>
                 <View style={styles.formContainer}>  
                     <View style={styles.inputContainer}>
-                        <MaterialIcons style={styles.userIcon} name="account-circle" size={24} color="#999" />
+                        <MaterialIcons style={styles.userIcon} name="account-circle" size={32} color="black" />
                         <TextInput
                             style={
                             error === true 
@@ -157,16 +157,18 @@ const textStyles = StyleSheet.create({
     },
     inputComponent: {
         borderRadius: 3,
-        backgroundColor: '#f3f3f3',
+        backgroundColor: 'white',
+        borderColor: '#f3f3f3',
+        borderWidth: 1,
         height: 60,
         paddingLeft: 60,
         paddingRight: 10,
         fontSize: 16,
         color: "black",
-        fontFamily: 'Bold' 
+        fontFamily: 'Light' 
     },
     inputError: {
-        backgroundColor: '#FFE1E1'
+        borderColor: 'red'
     }
 })
 

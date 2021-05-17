@@ -8,6 +8,10 @@ export const styles = StyleSheet.create({
         paddingVertical: 30,
         backgroundColor: 'white'
     },
+    moreActions: {
+        padding: 5,
+        margin: 0
+    },
     logoImage: {
         height: 150,
         width: 150,
@@ -30,8 +34,8 @@ export const styles = StyleSheet.create({
     },
     userIcon: {
         position: 'absolute',
-        left: 20,
-        top: 18,
+        left: 16,
+        top: 14,
         zIndex: 30
     },
     enterChat: {

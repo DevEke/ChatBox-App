@@ -1,0 +1,61 @@
+{
+	"folders": [
+		{
+			"name": "meet-app",
+			"path": "..\\meet-app"
+		},
+		{
+			"name": "MuviApp",
+			"path": "..\\MuviApp"
+		},
+		{
+			"name": "movie-api",
+			"path": "..\\movie-api"
+		},
+		{
+			"path": "..\\..\\..\\DevEkeProjects\\chriseke"
+		},
+		{
+			"path": "..\\..\\..\\DevEkeProjects\\FrontEndProjects\\petflix"
+		},
+		{
+			"path": "..\\..\\..\\DevEkeProjects\\FrontEndProjects\\petflix-api"
+		},
+		{
+			"path": "..\\..\\..\\DevEkeProjects\\chriseke2"
+		},
+		{
+			"path": "..\\Portfolio"
+		},
+		{
+			"path": "..\\Pokedex App\\Pokedex-App"
+		},
+		{
+			"path": "..\\hello-world"
+		},
+		{
+			"path": "..\\chat-app"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\..\\..\\DevEkeProjects\\mezzo"
+		},
+		{
+			"path": "..\\..\\..\\DevEkeProjects\\Shtudy Assets\\Files"
+		},
+		{
+			"path": "..\\..\\..\\DevEkeProjects\\invoice-app"
+		},
+		{
+			"path": "..\\native-demo"
+		},
+		{
+			"path": "..\\..\\..\\DevEkeProjects\\svl"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Moovies"
+	}
+}

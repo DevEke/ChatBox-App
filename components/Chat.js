@@ -3,17 +3,15 @@ import { styles } from '../styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import user1 from '../assets/icons/user1.png';
 import user2 from '../assets/icons/user2.png';
+import CustomActions from './CustomActions';
 import { Bubble, GiftedChat, InputToolbar, Send, Avatar } from 'react-native-gifted-chat';
-import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, Image, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, LogBox, Keyboard } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 const firebase = require('firebase');
 require('firebase/firestore');
 require('firebase/auth');
-
-
-
-  
+LogBox.ignoreLogs(['Setting a timer for a long period of time', 'undefined']);  
 
 class ChatScreen extends Component {
     constructor() {
@@ -21,12 +19,16 @@ class ChatScreen extends Component {
 
     // Initialize state 
         this.state = {
+            isConnected: false,
+            uid: 0,
             messages: [],
             user: {
-                uid: '',
-                name: ''
+                _id: '',
+                name: '',
+                avatar: null
             }
         }
+
     // firebase/firestore configurations
         const firebaseConfig = {
             apiKey: "AIzaSyC2q8Y5y4fHLdkzoyEx9dk4HbZXX5sOYLw",
@@ -35,56 +37,61 @@ class ChatScreen extends Component {
             storageBucket: "chatbox-e011d.appspot.com",
             messagingSenderId: "628881560408",
             appId: "1:628881560408:web:ee683c045fa59c19f4cb2d"
-          };
+        };
         
-          if (!firebase.apps.length) {
+        if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
-          }
-          this.referenceChatMessages = firebase.firestore().collection('messages');
-          this.referenceUsersList = firebase.firestore().collection('users');
+        }
+
+        this.referenceChatMessages = firebase.firestore().collection('messages');
+        this.referenceUsersList = firebase.firestore().collection('users');
           
     }
 
 // References active user list 
     onAuthStateChanged() {
-        this.referencedUser = firebase.firestore().collection('users').where("uid", "==". this.state.user.uid);
+        this.referencedUser = firebase.firestore().collection('users').where("_id", "==". this.state.user._id);
     }
 
 
 // Updates state with messages from the firebase firestore
-onMessagesUpdate = (querySnapshot) => {
-    const messages = [];
-     querySnapshot.forEach((doc) => {
-         let data = doc.data();
-         messages.push({
-             uid: data.uid,
-             text: data.text,
-             createdAt: data.createdAt.toDate(),
-             system: false
-         })
-     })
-     this.setState({messages: messages})
- }
+    onMessagesUpdate = (querySnapshot) => {
+        const messages = [];
+        querySnapshot.forEach((doc) => {
+            let data = doc.data();
+            messages.push({
+                user: {
+                    _id: data.user._id,
+                    name: data.user.name,
+                    avatar: data.user.avatar
+                },
+                text: data.text,
+                createdAt: data.createdAt.toDate(),
+                system: false,
+                image: data.image,
+                location: data.location
+            })
+        })
+        this.setState({messages: messages})
+    }
 
 // Adds messages to the firebaase firestore
- addMessages = () => {
-     const messages = this.state.messages[0];
-     this.referenceChatMessages.add({
-         text: messages.text || '',
-         createdAt: messages.createdAt,
-         system: false,
-         uid: messages._id,
-     })
- }
+    addMessages = () => {
+        const messages = this.state.messages[0];
+        this.referenceChatMessages.add({
+            text: messages.text || null,
+            createdAt: messages.createdAt,
+            system: false,
+            image: messages.image || null,
+            location: messages.location || null,
+            user: {
+                _id: messages.user._id,
+                name: messages.user.name,
+                avatar: messages.user.avatar
+            }
+        })
+    }
 
-// Adds a user the firebase firestore
- addUser = () => {
-     const user = this.state.user;
-     this.referenceUsersList.add({
-         uid: user.uid,
-         name: user.name,
-     })
- } 
 // Gets messages
     async getMessages() {
         let messages = '';
@@ -122,7 +129,38 @@ onMessagesUpdate = (querySnapshot) => {
 
 // App Component Mounted
     componentDidMount() {
-        this.getMessages();
+
+    // Checks for internet connection
+        NetInfo.fetch().then(connection => {
+            if (connection.isConnected) {
+                this.setState({
+                    isConnected: true
+                });
+            } else {
+                this.setState({
+                    isConnected: false
+                });
+                this.getMessages();
+            }
+            
+        // Firebase Authentication    
+            if (this.state.isConnected) {
+                this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
+                    if (!user) {
+                        user = await firebase.auth().signInAnonymously();
+                    }
+                    this.setState({
+                        user: {
+                            _id: user.uid,
+                            name: this.props.route.name,
+                            avatar: null
+                        }
+                    })
+                });
+                this.unsubscribe =  this.referenceChatMessages.orderBy('createdAt', 'desc').onSnapshot(this.onMessagesUpdate)
+            }
+        })
+        
 
     // Displays name from the login screen
         const { name } = this.props.route.params;
@@ -131,21 +169,8 @@ onMessagesUpdate = (querySnapshot) => {
     // References messages collection in firebase firestore
         this.referenceChatMessages = firebase.firestore().collection('messages');
 
-    // Firebase Authentication
-        this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
-            if (!user) {
-                firebase.auth().signInAnonymously();
-                this.setState({
-                    user: {
-                        uid: user.uid,
-                        name: name
-                    },
-                    messages: []
-                });
-                this.addUser();
-            }
-            this.unsubscribe = this.referenceChatMessages.orderBy('createdAt', 'desc').onSnapshot(this.onMessagesUpdate);
-        })
+
+        
     }
 
 
@@ -157,6 +182,7 @@ onMessagesUpdate = (querySnapshot) => {
             messages: GiftedChat.append(previousState.messages, messages),
         }), () => {
             this.saveMessages();
+            this.addMessages();
         });
         Keyboard.dismiss();
     }
@@ -179,7 +205,7 @@ onMessagesUpdate = (querySnapshot) => {
                 {...props}
                 wrapperStyle={{
                     right: {
-                        backgroundColor: '#333',
+                        backgroundColor: 'black',
                         borderRadius: 3,
                         padding: 5
                     },
@@ -195,20 +221,53 @@ onMessagesUpdate = (querySnapshot) => {
 
 // Styled Input
     customInputToolbar(props) {
-        return (
-            <InputToolbar
-                {...props}
-                    containerStyle={{
-                    backgroundColor: "white",
-                    borderTopWidth: 0,
-                    paddingLeft: 10,
-                    paddingRight: 5,
-                    paddingVertical: 5
-                }}
-            />
-        )
+        const { isConnected } = this.state;
+        if (!isConnected) {
+        } else {
+            return (
+                <InputToolbar
+                    {...props}
+                        containerStyle={{
+                        backgroundColor: "white",
+                        borderTopWidth: 0,
+                        paddingLeft: 10,
+                        paddingRight: 5,
+                        paddingVertical: 5
+                    }}
+                />
+            )
+        }
+        
     }
 
+// Custom Actions
+    renderCustomActions(props) {
+        return <CustomActions {...props}/>
+    }
+
+// Renders Custom Map View
+    renderCustomView(props) {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return (
+                <MapView
+                style={{
+                    width: 150,
+                    height: 100,
+                    borderRadius: 5,
+                    margin: 3
+                }}
+                region={{
+                    latitude: currentMessage.location.latitude,
+                    longitude: currentMessage.location.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421
+                }}/>
+
+            )
+        }
+        return null
+    }
 
 // On Component UnMount
     componentWillUnmount() {
@@ -223,7 +282,7 @@ onMessagesUpdate = (querySnapshot) => {
     
 // App Rendered
     render() {
-        let { color, name } = this.props.route.params;
+        const { color, name } = this.props.route.params;
         const { messages, user } = this.state;
         return (
             <View style={[styles.chatContainer, { backgroundColor: color}]}>
@@ -238,9 +297,12 @@ onMessagesUpdate = (querySnapshot) => {
                     onSend={messages => this.onSend(messages)}
                     renderInputToolbar={this.customInputToolbar.bind(this)}
                     renderSend={this.renderSend.bind(this)}
+                    renderActions={this.renderCustomActions}
+                    renderCustomView={this.renderCustomView}
                     user={{
-                        name: user.name,
-                        _id: user.uid
+                        name: name,
+                        _id: user._id,
+                        avatar: null
                     }}
                     textStyles={textStyles.input}
                 />
